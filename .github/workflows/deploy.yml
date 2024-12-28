@@ -1,0 +1,54 @@
+name: Deploy to AWS
+
+on:
+  push:
+    branches:
+      - release
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Kodu checkout yapın
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # 2. Node.js ortamını kurun ve bağımlılıkları yükleyin
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+
+      - name: Install dependencies
+        run: yarn install
+
+      # 3. Build işlemini gerçekleştirin
+      - name: Build project
+        run: yarn build
+
+      # 4. AWS CLI'yi yükleyin
+      - name: Install AWS CLI
+        run: |
+          sudo apt-get install -y unzip
+          curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+          unzip awscliv2.zip
+          sudo ./aws/install
+
+      # 5. AWS kimlik bilgilerini ayarlayın
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v3
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: your-region
+
+      # 6. Build dizinini S3'ye yükleyin (veya başka bir servis)
+      - name: Deploy to S3
+        run: |
+          aws s3 sync ./build s3://your-s3-bucket-name --delete
+
+      # 7. CloudFront (varsa) önbelleği temizleyin
+      - name: Invalidate CloudFront cache
+        run: |
+          aws cloudfront create-invalidation --distribution-id your-distribution-id --paths "/*"

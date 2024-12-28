@@ -1,0 +1,242 @@
+[
+  {
+    "title": "Girişimcilik Zirvesi",
+    "description": "Genç girişimciler için networking ve seminer etkinliği.",
+    "organizer": {
+      "name": "Girişimcilik Topluluğu",
+      "email": "topluluk@universite.edu.tr",
+      "password": "password123",
+      "userType": "community",
+      "badges": [],
+      "point": 0,
+      "createdAt": "2024-12-01"
+    },
+    "date": "2025-01-15",
+    "location": "Üniversite Kongre Merkezi",
+    "badge": {
+      "name": "Girişimci Rozeti",
+      "description": "Girişimcilik Zirvesine katılım ödülü.",
+      "point": 50
+    },
+    "qrCode": "https://example.com/qr/girisimcilik",
+    "participants": [],
+    "approved": true,
+    "createdAt": "2024-12-10"
+  },
+  {
+    "title": "Teknoloji ve Yapay Zeka Konferansı",
+    "description": "Teknolojinin geleceği ve yapay zeka üzerine bir etkinlik.",
+    "organizer": {
+      "name": "Bilgisayar Topluluğu",
+      "email": "bilgisayar@universite.edu.tr",
+      "password": "password123",
+      "userType": "community",
+      "badges": [],
+      "point": 0,
+      "createdAt": "2024-12-01"
+    },
+    "date": "2025-02-20",
+    "location": "Teknoloji Merkezi",
+    "badge": {
+      "name": "Teknoloji Uzmanı Rozeti",
+      "description": "Teknoloji ve Yapay Zeka Konferansına katılım ödülü.",
+      "point": 100
+    },
+    "qrCode": "https://example.com/qr/teknoloji",
+    "participants": [],
+    "approved": true,
+    "createdAt": "2024-12-12"
+  },
+  {
+    "title": "Kariyer ve İstihdam Fuarı",
+    "description": "Şirketlerin gençlerle buluştuğu kariyer etkinliği.",
+    "organizer": {
+      "name": "Üniversite Kariyer Merkezi",
+      "email": "kariyer@universite.edu.tr",
+      "password": "password123",
+      "userType": "organization",
+      "badges": [],
+      "point": 0,
+      "createdAt": "2024-12-01"
+    },
+    "date": "2025-03-05",
+    "location": "Üniversite Spor Salonu",
+    "badge": {
+      "name": "Kariyer Yolcusu Rozeti",
+      "description": "Kariyer ve İstihdam Fuarına katılım ödülü.",
+      "point": 70
+    },
+    "qrCode": "https://example.com/qr/kariyer",
+    "participants": [],
+    "approved": true,
+    "createdAt": "2024-12-15"
+  },
+  {
+    "title": "Kodlama Maratonu",
+    "description": "Takımlarla kodlama yapıp ödüller kazanabileceğiniz bir etkinlik.",
+    "organizer": {
+      "name": "Kodlama Kulübü",
+      "email": "kodlama@universite.edu.tr",
+      "password": "password123",
+      "userType": "community",
+      "badges": [],
+      "point": 0,
+      "createdAt": "2024-12-01"
+    },
+    "date": "2025-04-10",
+    "location": "Bilgisayar Laboratuvarı",
+    "badge": {
+      "name": "Kodlama Kahramanı Rozeti",
+      "description": "Kodlama Maratonuna katılım ödülü.",
+      "point": 150
+    },
+    "qrCode": "https://example.com/qr/kodlama",
+    "participants": [],
+    "approved": true,
+    "createdAt": "2024-12-18"
+  },
+  {
+    "title": "Sanat ve Tasarım Çalıştayı",
+    "description": "Sanat ve tasarım alanında atölye çalışmaları ve sergi.",
+    "organizer": {
+      "name": "Sanat Topluluğu",
+      "email": "sanat@universite.edu.tr",
+      "password": "password123",
+      "userType": "community",
+      "badges": [],
+      "point": 0,
+      "createdAt": "2024-12-01"
+    },
+    "date": "2025-05-01",
+    "location": "Sanat Merkezi",
+    "badge": {
+      "name": "Sanat Tutkunu Rozeti",
+      "description": "Sanat ve Tasarım Çalıştayına katılım ödülü.",
+      "point": 30
+    },
+    "qrCode": "https://example.com/qr/sanat",
+    "participants": [],
+    "approved": true,
+    "createdAt": "2024-12-20"
+  },
+  {
+    "title": "Sürdürülebilirlik Zirvesi",
+    "description": "Çevre bilinci ve sürdürülebilirlik üzerine konuşmalar ve paneller.",
+    "organizer": {
+      "name": "Çevre Topluluğu",
+      "email": "cevre@universite.edu.tr",
+      "password": "password123",
+      "userType": "community",
+      "badges": [],
+      "point": 0,
+      "createdAt": "2024-12-01"
+    },
+    "date": "2025-06-15",
+    "location": "Üniversite Yeşil Alanı",
+    "badge": {
+      "name": "Çevre Dostu Rozeti",
+      "description": "Sürdürülebilirlik Zirvesine katılım ödülü.",
+      "point": 40
+    },
+    "qrCode": "https://example.com/qr/cevre",
+    "participants": [],
+    "approved": true,
+    "createdAt": "2024-12-25"
+  },
+  {
+    "title": "Robotik ve Otomasyon Günleri",
+    "description": "Robotik projelerinin sergilendiği ve yarışmaların düzenlendiği etkinlik.",
+    "organizer": {
+      "name": "Robotik Kulübü",
+      "email": "robotik@universite.edu.tr",
+      "password": "password123",
+      "userType": "community",
+      "badges": [],
+      "point": 0,
+      "createdAt": "2024-12-01"
+    },
+    "date": "2025-07-10",
+    "location": "Teknoloji Merkezi",
+    "badge": {
+      "name": "Robotik Uzmanı Rozeti",
+      "description": "Robotik ve Otomasyon Günlerine katılım ödülü.",
+      "point": 80
+    },
+    "qrCode": "https://example.com/qr/robotik",
+    "participants": [],
+    "approved": true,
+    "createdAt": "2024-12-27"
+  },
+  {
+    "title": "Spor Festivali",
+    "description": "Futbol, basketbol ve diğer spor dallarında turnuvalar.",
+    "organizer": {
+      "name": "Spor Topluluğu",
+      "email": "spor@universite.edu.tr",
+      "password": "password123",
+      "userType": "community",
+      "badges": [],
+      "point": 0,
+      "createdAt": "2024-12-01"
+    },
+    "date": "2025-08-01",
+    "location": "Üniversite Spor Kompleksi",
+    "badge": {
+      "name": "Sporcu Rozeti",
+      "description": "Spor Festivaline katılım ödülü.",
+      "point": 20
+    },
+    "qrCode": "https://example.com/qr/spor",
+    "participants": [],
+    "approved": true,
+    "createdAt": "2024-12-28"
+  },
+  {
+    "title": "Edebiyat Sohbetleri",
+    "description": "Ünlü yazarlarla edebiyat üzerine söyleşi ve imza günü.",
+    "organizer": {
+      "name": "Edebiyat Topluluğu",
+      "email": "edebiyat@universite.edu.tr",
+      "password": "password123",
+      "userType": "community",
+      "badges": [],
+      "point": 0,
+      "createdAt": "2024-12-01"
+    },
+    "date": "2025-09-10",
+    "location": "Kütüphane Konferans Salonu",
+    "badge": {
+      "name": "Edebiyatsever Rozeti",
+      "description": "Edebiyat Sohbetlerine katılım ödülü.",
+      "point": 25
+    },
+    "qrCode": "https://example.com/qr/edebiyat",
+    "participants": [],
+    "approved": true,
+    "createdAt": "2024-12-29"
+  },
+  {
+    "title": "Film Festivali",
+    "description": "Üniversite öğrencilerinin kısa filmlerinin gösterimi ve ödül töreni.",
+    "organizer": {
+      "name": "Sinema Topluluğu",
+      "email": "sinema@universite.edu.tr",
+      "password": "password123",
+      "userType": "community",
+      "badges": [],
+      "point": 0,
+      "createdAt": "2024-12-01"
+    },
+    "date": "2025-10-05",
+    "location": "Üniversite Amfisi",
+    "badge": {
+      "name": "Sinema Tutkunu Rozeti",
+      "description": "Film Festivaline katılım ödülü.",
+      "point": 60
+    },
+    "qrCode": "https://example.com/qr/sinema",
+    "participants": [],
+    "approved": true,
+    "createdAt": "2024-12-30"
+  }
+]

@@ -16,7 +16,7 @@ const Error404 = () => {
   return (
     <div
       className="flex flex-col items-center justify-center px-4"
-      style={{ minHeight: "calc(100vh - 60px)" }}
+      style={{ minHeight: "calc(100vh - 80px)" }}
     >
       <Lottie
         options={defaultOptions}

@@ -2,6 +2,7 @@ import { Badge } from "./Badge";
 import { User } from "./User";
 
 export interface EventType {
+  _id?: string;
   title: string;
   description: string;
   organizer: User;
@@ -12,4 +13,5 @@ export interface EventType {
   participants?: User[];
   approved?: boolean;
   createdAt?: string;
+  image: string;
 }

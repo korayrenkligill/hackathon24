@@ -1,9 +1,27 @@
 import { Carousel } from "@mantine/carousel";
 import Event from "../Event/Event";
-import events from "../../assets/temp/events.json";
 import { EventType } from "../../interfaces/Event";
+import axios from "../../utils/axiosConfig";
+import { ApiUrls } from "../../api/apiUrls";
+import { useEffect, useState } from "react";
+import { useIntl } from "react-intl";
+import { Link } from "react-router-dom";
 
 const LastestEvents = () => {
+  const intl = useIntl();
+  const [events, setEvents] = useState<EventType[]>([]);
+  const getEvents = async () => {
+    try {
+      await axios.get(ApiUrls.events.events).then((res) => {
+        setEvents(res.data);
+      });
+    } catch (error: any) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    getEvents();
+  }, []);
   return (
     <div className="my-12">
       <Carousel
@@ -23,9 +41,13 @@ const LastestEvents = () => {
           </Carousel.Slide>
         ))}
       </Carousel>
-      {/* <h1 className="text-3xl font-bold uppercase text-center text-text-light dark:text-text-dark my-12">
-        🎉 Son Etkinlikler
-      </h1> */}
+      <Link
+        to="/etkinlik-listesi"
+        className="block text-2xl font-bold font-outfit uppercase text-center text-text-light dark:text-text-dark my-12"
+      >
+        🎉 {intl.formatMessage({ id: "common.forMore" })}{" "}
+        <span className="inline-block -rotate-45">☝️</span>
+      </Link>
     </div>
   );
 };

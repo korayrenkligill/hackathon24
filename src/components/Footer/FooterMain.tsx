@@ -2,7 +2,7 @@ const FooterMain = () => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-8 py-12 md:py-20 px-4">
       <div className="flex flex-col gap-4">
-        <h1 className="text-5xl font-bold">LOGO</h1>
+        <img src="/logo.png" alt="logo" className="w-16 mx-auto" />
         <p>
           ❤️ Lorem ipsum, dolor sit amet consectetur adipisicing elit. Repellat,
           quaerat!

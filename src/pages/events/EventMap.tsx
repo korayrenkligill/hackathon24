@@ -5,12 +5,13 @@ import {
   Marker,
 } from "react-simple-maps";
 import map from "../../assets/json/tr-cities.json";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@mantine/core";
 import Event from "../../components/Event/Event";
 import { motion } from "framer-motion";
-import events from "../../assets/temp/events.json";
 import { EventType } from "../../interfaces/Event";
+import { ApiUrls } from "../../api/apiUrls";
+import axios from "../../utils/axiosConfig";
 
 interface geoMarker {
   name: string;
@@ -150,6 +151,20 @@ const EventMap = () => {
     setSelectedCity(cityName); // Şehri state'e ata
     console.log(`Tıklanan şehir: ${cityName}`); // Konsola yazdır
   };
+
+  const [events, setEvents] = useState<EventType[]>([]);
+  const getEvents = async () => {
+    try {
+      await axios.get(ApiUrls.events.events).then((res) => {
+        setEvents(res.data);
+      });
+    } catch (error: any) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    getEvents();
+  }, []);
   return (
     <div>
       <div className="max-w-screen max-h-screen overflow-auto bg-gradient-to-r from-indigo-500 to-blue-500 dark:from-background-darkAlt3 dark:to-background-darkAlt2">

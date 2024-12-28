@@ -88,8 +88,8 @@ const StatisticsSection = () => {
             end={150}
             duration={500}
             layers={[
-              { opacity: 0.2, duration: 5000 },
-              { opacity: 0.1, duration: 15000 },
+              { opacity: 0.1, duration: 5000 },
+              { opacity: 0.05, duration: 15000 },
             ]}
           />
           <p className="text-lg text-blue-500 mt-2">Değer 1</p>
@@ -100,8 +100,8 @@ const StatisticsSection = () => {
             end={760}
             duration={500}
             layers={[
-              { opacity: 0.2, duration: 5000 },
-              { opacity: 0.1, duration: 15000 },
+              { opacity: 0.1, duration: 5000 },
+              { opacity: 0.05, duration: 15000 },
             ]}
           />
           <p className="text-lg text-blue-500 mt-2">Değer 2</p>
@@ -112,8 +112,8 @@ const StatisticsSection = () => {
             end={100}
             duration={500}
             layers={[
-              { opacity: 0.2, duration: 5000 },
-              { opacity: 0.1, duration: 15000 },
+              { opacity: 0.1, duration: 5000 },
+              { opacity: 0.05, duration: 15000 },
             ]}
           />
           <p className="text-lg text-blue-500 mt-2">Değer 3</p>
@@ -124,8 +124,8 @@ const StatisticsSection = () => {
             end={275}
             duration={500}
             layers={[
-              { opacity: 0.2, duration: 5000 },
-              { opacity: 0.1, duration: 15000 },
+              { opacity: 0.1, duration: 5000 },
+              { opacity: 0.05, duration: 15000 },
             ]}
           />
           <p className="text-lg text-blue-500 mt-2">Değer 4</p>

@@ -55,7 +55,7 @@ const Award = ({ award }: { award: AwardType }) => {
           alt="award image"
           className="w-[60px] h-[60px] rounded-full"
         />
-        <p className="text-sm text-text-light dark:text-text-dark">
+        <p className="text-base text-text-light dark:text-text-dark">
           {award.title}
         </p>
       </div>
@@ -97,7 +97,7 @@ const AwardsPage = (props: Props) => {
               alt="image"
               className="w-[60px] h-[60px] rounded-full"
             />
-            <p className="text-sm mb-4">name surname</p>
+            <p className="text-base mb-4">name surname</p>
             <div className="w-[60px] bg-indigo-400 h-[100px] rounded-t-xl"></div>
           </div>
           <div className="flex flex-col items-center justify-end">
@@ -106,7 +106,7 @@ const AwardsPage = (props: Props) => {
               alt="image"
               className="w-[60px] h-[60px] rounded-full"
             />
-            <p className="text-sm mb-4">name surname</p>
+            <p className="text-base mb-4">name surname</p>
             <div className="w-[60px] bg-yellow-400 h-[160px] rounded-t-xl"></div>
           </div>
           <div className="flex flex-col items-center justify-end">
@@ -115,7 +115,7 @@ const AwardsPage = (props: Props) => {
               alt="image"
               className="w-[60px] h-[60px] rounded-full"
             />
-            <p className="text-sm mb-4">name surname</p>
+            <p className="text-base mb-4">name surname</p>
             <div className="w-[60px] bg-red-400 h-[130px] rounded-t-xl"></div>
           </div>
           <div className="absolute top-full left-0 h-1 w-full bg-gradient-to-r from-indigo-500 to-blue-500 dark:from-background-darkAlt3 dark:to-background-darkAlt2"></div>

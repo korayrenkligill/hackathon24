@@ -15,6 +15,7 @@ import { authAtom, useAuth } from "../AuthContext";
 import userAtom from "../../store/User";
 import axios from "../../utils/axiosConfig";
 import { ApiUrls } from "../../api/apiUrls";
+import { useIntl } from "react-intl";
 
 const menuIsOpenAtom = atom<boolean>(false);
 
@@ -169,10 +170,28 @@ const ButtonLink = ({ name, path, disabled }: NavbarButtonType) => {
 };
 
 const Navbar = () => {
+  const intl = useIntl();
   const navigation = useNavigate();
   const { isAuthenticated } = useAuth();
   const setIsAuthenticated = useSetAtom(authAtom);
   const [isMenuOpen, setIsMenuOpen] = useAtom(menuIsOpenAtom);
+
+  const flags = [
+    {
+      language: "tr",
+      flag: "/flags/tr.png",
+    },
+    {
+      language: "en",
+      flag: "/flags/en.png",
+    },
+    {
+      language: "az",
+      flag: "/flags/az.png",
+    },
+  ];
+
+  const [flag, setFlag] = useState(localStorage.getItem("lang") || "tr");
 
   const [user, setUser] = useAtom(userAtom);
   const getMe = async () => {
@@ -190,13 +209,13 @@ const Navbar = () => {
   }, []);
   return (
     <nav
-      className={`flex flex-col md:flex-row gap-4 md:items-center md:backdrop-blur-sm ${
-        isMenuOpen ? "h-screen" : "h-[60px]"
-      } sticky top-0 left-0 px-6 z-[50] py-4 bg-background-light dark:bg-background-dark md:bg-background-light/50 md:dark:bg-background-dark/80 border-b border-background-dark/20 dark:border-background-light/10 text-nowrap md:h-[60px]`}
+      className={`flex flex-col md:flex-row gap-4 md:items-center md:justify-between md:backdrop-blur-sm ${
+        isMenuOpen ? "h-screen" : "h-[80px]"
+      } sticky top-0 left-0 px-6 z-[50] py-4 bg-background-light dark:bg-background-dark md:bg-background-light/80 md:dark:bg-background-dark/90 border-b border-background-dark/20 dark:border-background-light/10 text-nowrap md:h-[80px]`}
     >
       <div className="flex items-center justify-between ">
         <div className="flex items-center gap-4">
-          <img src="/logo.png" className="w-10 h-10" alt="logo" />
+          <img src="/logo.png" className="w-14 h-14" alt="logo" />
           <ThemeToggleButton />
         </div>
         <button
@@ -209,7 +228,7 @@ const Navbar = () => {
       <div
         className={`${
           isMenuOpen ? "flex" : "hidden md:flex"
-        } flex-col md:flex-row md:items-center md:gap-8 md:ml-auto w-full md:w-auto text-text-light dark:text-text-dark`}
+        } flex-col md:flex-row md:items-center md:gap-8 w-full md:w-auto text-text-light dark:text-text-dark text-xl`}
       >
         {links.map((link, index) => {
           if (link.type === "link") {
@@ -229,8 +248,32 @@ const Navbar = () => {
             );
           }
         })}
-
-        {isAuthenticated && user ? (
+      </div>
+      <div
+        className={`gap-4 cursor-pointer ${
+          isMenuOpen ? "flex flex-col" : "hidden md:flex flex-row items-center"
+        }`}
+      >
+        <img
+          onClick={() =>
+            setFlag((old) => {
+              if (old === "az") localStorage.setItem("lang", "tr");
+              if (old === "tr") localStorage.setItem("lang", "en");
+              if (old === "en") localStorage.setItem("lang", "az");
+              return old === "tr" ? "en" : old === "en" ? "az" : "tr";
+            })
+          }
+          src={
+            flag === "tr"
+              ? flags[0].flag
+              : flag === "en"
+              ? flags[1].flag
+              : flags[2].flag
+          }
+          className="w-8 h-8"
+          alt="flag"
+        />
+        {user ? (
           <div
             className="flex items-center justify-center cursor-pointer"
             onClick={() => navigation("/profil")}
@@ -239,13 +282,13 @@ const Navbar = () => {
             <img
               src="https://placehold.co/600x400"
               alt="profil resmi"
-              className="w-10 h-10 object-cover rounded-full"
+              className="w-14 h-14 object-cover rounded-full"
             />
           </div>
         ) : (
           <ButtonLink
             type="button"
-            name="Giriş Yap / Kayıt Ol"
+            name={intl.formatMessage({ id: "nav.loginRegister" })}
             path="/giris-yap"
             disabled={isAuthenticated}
           />

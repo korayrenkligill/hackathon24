@@ -18,42 +18,62 @@ import AwardsPage from "./pages/awards/AwardsPage";
 import { ToastContainer } from "react-toastify";
 import { Provider } from "jotai";
 import { myStore } from "./store/User";
+import EventCreate from "./pages/events/EventCreate";
+import ForumDetail from "./components/Forum/ForumDetail";
+import Profile from "./pages/profile/Profile";
+import { IntlProvider } from "react-intl";
 function App() {
+  const language = JSON.parse(localStorage.getItem("language") || "{}");
+  const lang = localStorage.getItem("lang") || "tr";
   return (
     <ThemeProvider>
       <div className="App">
-        <BrowserRouter>
-          <Provider store={myStore}>
-            <AuthProvider>
-              <ScrollToTop />
-              <Routes>
-                <Route element={<Main />}>
-                  <Route path="/" element={<Home />} />
-                  <Route path="/etkinlik-listesi" element={<EventListPage />} />
-                  <Route path="/etkinlik-haritası" element={<EventMap />} />
-                  <Route path="/forum" element={<ForumPage />} />
-                  <Route path="/oduller" element={<AwardsPage />} />
-                  {/* Buraya GİRİŞ YAPMIŞ kullanıcılar giremez */}
-                  <Route element={<GuestProtectedRoutes />}>
-                    <Route path="/giris-yap" element={<LoginPage />} />
-                    <Route path="/kayit-ol" element={<RegisterPage />} />
-                    <Route path="/mail-onay" element={<MailActivation />} />
+        {/* 
+// @ts-ignore */}
+        <IntlProvider locale={lang} messages={language}>
+          <BrowserRouter>
+            <Provider store={myStore}>
+              <AuthProvider>
+                <ScrollToTop />
+                <Routes>
+                  <Route element={<Main />}>
+                    <Route path="/" element={<Home />} />
+                    <Route
+                      path="/etkinlik-listesi"
+                      element={<EventListPage />}
+                    />
+                    <Route path="/etkinlik-haritası" element={<EventMap />} />
+                    <Route path="/forum" element={<ForumPage />} />
+                    <Route path="/forum/:id" element={<ForumDetail />} />
+                    <Route path="/oduller" element={<AwardsPage />} />
+                    <Route path="/profil" element={<Profile />} />
+                    {/* Buraya GİRİŞ YAPMIŞ kullanıcılar giremez */}
+                    <Route element={<GuestProtectedRoutes />}>
+                      <Route path="/giris-yap" element={<LoginPage />} />
+                      <Route path="/kayit-ol" element={<RegisterPage />} />
+                      <Route path="/mail-onay" element={<MailActivation />} />
+                    </Route>
+                    {/* Buraya GİRİŞ YAPMAMIŞ kullanıcılar giremez */}
+                    <Route element={<AuthProtectedRoutes />}>
+                      <Route
+                        path="/etkinlik-olustur"
+                        element={<EventCreate />}
+                      />
+                      {/* <Route path="/profil" element={<ProfilePage />} /> */}
+                      {/* <Route path="/hesap" element={<AccountPage />} /> */}
+                    </Route>
                   </Route>
-                  {/* Buraya GİRİŞ YAPMAMIŞ kullanıcılar giremez */}
-                  <Route element={<AuthProtectedRoutes />}>
-                    {/* <Route path="/profil" element={<ProfilePage />} /> */}
-                    {/* <Route path="/hesap" element={<AccountPage />} /> */}
+                  <Route element={<Full />} />
+                  <Route element={<Main />}>
+                    <Route path="*" element={<Error404 />} />
                   </Route>
-                </Route>
-                <Route element={<Full />} />
-                <Route element={<Main />}>
-                  <Route path="*" element={<Error404 />} />
-                </Route>
-              </Routes>
-            </AuthProvider>
-          </Provider>
-        </BrowserRouter>
-        <ToastContainer />
+                </Routes>
+              </AuthProvider>
+            </Provider>
+          </BrowserRouter>
+          <ToastContainer />
+        </IntlProvider>
+        {/* tslint:enable */}
       </div>
     </ThemeProvider>
   );

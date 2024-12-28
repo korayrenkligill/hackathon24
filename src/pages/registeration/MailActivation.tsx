@@ -4,7 +4,7 @@ const MailActivation = () => {
   return (
     <div
       className="flex flex-col items-center justify-center px-4 relative z-10"
-      style={{ minHeight: "calc(100vh - 60px)" }}
+      style={{ minHeight: "calc(100vh - 80px)" }}
     >
       <div className=" flex flex-col items-center gap-4 p-4 md:p-8 bg-background-lightAlt1/80 dark:bg-background-darkAlt2/80 rounded-xl backdrop-blur-sm w-full max-w-[800px]">
         <img src="/logo.png" alt="" className="w-20 h-20" />

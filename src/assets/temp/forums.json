@@ -1,0 +1,71 @@
+{
+  "title": "Yazılım Geliştiricileri için En İyi Uygulamalar",
+  "content": "Yazılım geliştirme süreçlerinde daha iyi bir performans ve verimlilik için hangi uygulamaları önerirsiniz? Kod incelemesi, test yazımı veya ekip iletişimi gibi konular hakkında tartışabiliriz.",
+  "author": {
+    "name": "Ahmet Yılmaz",
+    "email": "ahmet.yilmaz@example.com",
+    "password": "password123",
+    "userType": "young",
+    "badges": [
+      {
+        "name": "Kodlama Kahramanı",
+        "description": "Kodlama yarışmasına katıldığı için verilen rozet.",
+        "icon": "icon-kahraman.png",
+        "point": 100,
+        "createdAt": "2024-12-15"
+      }
+    ],
+    "point": 120,
+    "createdAt": "2024-12-01"
+  },
+  "comments": [
+    {
+      "user": {
+        "name": "Ayşe Demir",
+        "email": "ayse.demir@example.com",
+        "password": "password123",
+        "userType": "community",
+        "badges": [],
+        "point": 50,
+        "createdAt": "2024-11-30"
+      },
+      "content": "Kod incelemesi ekip içi öğrenim açısından çok önemli. Özellikle yeni başlayanların deneyimli ekip üyelerinden bir şeyler öğrenmesi için fırsat sağlıyor.",
+      "createdAt": "2024-12-20"
+    },
+    {
+      "user": {
+        "name": "Mehmet Kaya",
+        "email": "mehmet.kaya@example.com",
+        "password": "password123",
+        "userType": "young",
+        "badges": [],
+        "point": 30,
+        "createdAt": "2024-12-10"
+      },
+      "content": "Test yazımı ve otomasyon süreçleri projelerin daha güvenli bir şekilde ilerlemesini sağlıyor. Tavsiyem, her yeni özellik için mutlaka test yazılması.",
+      "createdAt": "2024-12-21"
+    }
+  ],
+  "likes": [
+    {
+      "name": "Zeynep Çelik",
+      "email": "zeynep.celik@example.com",
+      "password": "password123",
+      "userType": "young",
+      "badges": [],
+      "point": 80,
+      "createdAt": "2024-11-25"
+    },
+    {
+      "name": "Ali Vural",
+      "email": "ali.vural@example.com",
+      "password": "password123",
+      "userType": "community",
+      "badges": [],
+      "point": 45,
+      "createdAt": "2024-12-05"
+    }
+  ],
+  "tags": ["yazılım", "en iyi uygulamalar", "test", "kod incelemesi"],
+  "createdAt": "2024-12-18"
+}

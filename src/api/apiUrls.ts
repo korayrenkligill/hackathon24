@@ -1,4 +1,4 @@
-export const baseUrl = "http://192.168.1.163:5000";
+export const baseUrl = "http://176.96.131.145:5000";
 
 export const ApiUrls = {
   announcements: {
@@ -17,7 +17,7 @@ export const ApiUrls = {
     my: `${baseUrl}/fileUpload/my`,
   },
   forum: {
-    forum: `${baseUrl}/forum`,
+    forums: `${baseUrl}/forums`,
   },
   translation: {
     translation: `${baseUrl}/translations`,

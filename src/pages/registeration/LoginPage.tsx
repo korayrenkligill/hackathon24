@@ -1,30 +1,49 @@
 import { Button, TextInput } from "@mantine/core";
-import { useSetAtom } from "jotai";
+import { useAtom, useSetAtom } from "jotai";
 import { Link, useNavigate } from "react-router-dom";
 import { authAtom } from "../../components/AuthContext";
 import { useState } from "react";
 import { ApiUrls } from "../../api/apiUrls";
-import axios from "axios";
 import { toast } from "react-toastify";
+import userAtom from "../../store/User";
+import axios from "axios";
+import { useIntl } from "react-intl";
 
 const LoginPage = () => {
+  const intl = useIntl();
   const navigation = useNavigate();
   const setIsAuthenticated = useSetAtom(authAtom);
-  const [user, setUser] = useState<any>({
+  const [user, setUser] = useAtom(userAtom);
+  const [userData, setUserData] = useState<any>({
     email: "",
     password: "",
   });
 
+  const getMe = async (token: string) => {
+    try {
+      await axios
+        .get(ApiUrls.users.profile, {
+          headers: { Authorization: `Bearer ${token}` },
+        })
+        .then((res) => {
+          setIsAuthenticated(true);
+          setUser(res.data);
+        });
+    } catch (error: any) {
+      console.log(error);
+    }
+  };
   const Login = async () => {
     try {
-      const response = await axios.post(ApiUrls.users.login, user);
+      const response = await axios.post(ApiUrls.users.login, userData);
       const token = response.data.token;
       localStorage.setItem("token", token);
+      getMe(token);
       setIsAuthenticated(true);
       navigation("/");
       return response.data;
     } catch (error: any) {
-      toast.error("Giriş Yapılamadı!");
+      toast.error(intl.formatMessage({ id: "error.login" }));
       return;
     }
   };
@@ -32,12 +51,12 @@ const LoginPage = () => {
   return (
     <div
       className="flex flex-col items-center justify-center px-4 relative z-10"
-      style={{ minHeight: "calc(100vh - 60px)" }}
+      style={{ minHeight: "calc(100vh - 80px)" }}
     >
       <div className=" flex flex-col items-center gap-4 p-4 md:p-8 bg-background-lightAlt1/80 dark:bg-background-darkAlt2/80 rounded-xl backdrop-blur-sm w-full max-w-[800px]">
         <img src="/logo.png" alt="" className="w-20 h-20" />
         <h1 className="text-xl font-bold text-center">
-          HESABINIZA GİRİŞ YAPIN
+          {intl.formatMessage({ id: "login.title" })}
         </h1>
         <form
           onSubmit={(e) => {
@@ -48,25 +67,29 @@ const LoginPage = () => {
         >
           <TextInput
             type="email"
-            label="E-posta"
+            label={intl.formatMessage({ id: "common.email" })}
             required
             id="login-surname"
             size="md"
             className="w-full"
             autoComplete="email webauthn"
-            value={user.email}
-            onChange={(e) => setUser({ ...user, email: e.target.value })}
+            value={userData.email}
+            onChange={(e) =>
+              setUserData({ ...userData, email: e.target.value })
+            }
           />
           <TextInput
             type="password"
-            label="Şifre"
+            label={intl.formatMessage({ id: "common.password" })}
             required
             id="login-password"
             size="md"
             className="w-full"
             autoComplete="password webauthn"
-            value={user.password}
-            onChange={(e) => setUser({ ...user, password: e.target.value })}
+            value={userData.password}
+            onChange={(e) =>
+              setUserData({ ...userData, password: e.target.value })
+            }
           />
           <Button
             size="md"
@@ -75,21 +98,15 @@ const LoginPage = () => {
             className="mt-4"
             type="submit"
           >
-            Giriş Yap
+            {intl.formatMessage({ id: "common.signIn" })}
           </Button>
           <Link
             to="/kayit-ol"
-            className="text-sm text-text-light dark:text-text-dark text-center"
+            className="text-base text-text-light dark:text-text-dark text-center"
           >
-            Hesabınız yok mu?
+            {intl.formatMessage({ id: "login.register" })}
           </Link>
         </form>
-      </div>
-      <div
-        className="w-full h-full absolute top-0 left-0 overflowX-hidden opacity-25"
-        style={{ zIndex: -1 }}
-      >
-        <img src="/shapes/line.png" alt="line" className="w-full" />
       </div>
     </div>
   );

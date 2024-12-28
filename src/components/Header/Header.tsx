@@ -4,46 +4,44 @@ import { TypeAnimation } from "react-type-animation";
 import { AnimatePresence, motion } from "framer-motion";
 import { useLocation } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
+import { useIntl } from "react-intl";
 
 type Props = {
   title: string;
   description: string;
 };
 
-export const texts = [
-  "Hafta sonu yakınlarda bir etkinlik var mı?",
-  1000,
-  "Bugün İstanbul'da hangi etkinlikler düzenleniyor?",
-  1000,
-  "Spor etkinlikleri nasıl bulabilirim?",
-  1000,
-  "Ücretsiz eğitim etkinlikleri var mı?",
-  1000,
-  "Katıldığım etkinliklerden nasıl rozet kazanırım?",
-  1000,
-  "Yakındaki üniversite toplulukları hangi etkinlikleri düzenliyor?",
-  1000,
-];
-
-export const greetings = [
-  "Merhaba! Size nasıl yardımcı olabilirim?",
-  "Selam! Bir sorunuz mu var? Hemen yanıtlayabilirim.",
-  "Merhaba! Burada olduğuma sevindim. :)",
-  "Selamlar! Bugün size nasıl yardımcı olabilirim?",
-  "Hey! Beni çağırdınız mı?",
-  "Merhaba! İhtiyacınız olan bir şey varsa buradayım.",
-  "Selam! Size yardımcı olmak için buradayım.",
-  "Merhaba! Nasılsınız? Sorularınızı bekliyorum.",
-  "Selam! Hadi başlayalım, size nasıl yardımcı olabilirim?",
-  "Merhaba! Bugün size rehberlik etmek için buradayım.",
-];
-
 const Header = ({ title, description }: Props) => {
+  const intl = useIntl();
   const location = useLocation();
   const inputRef = useRef<HTMLInputElement>(null);
 
   const [showBot, setShowBot] = useState(false);
   const [greeting, setGreeting] = useState("");
+
+  const texts = [
+    intl.formatMessage({ id: "main.header.question1" }),
+    1000,
+    intl.formatMessage({ id: "main.header.question2" }),
+    1000,
+    intl.formatMessage({ id: "main.header.question3" }),
+    1000,
+    intl.formatMessage({ id: "main.header.question4" }),
+    1000,
+    intl.formatMessage({ id: "main.header.question5" }),
+    1000,
+    intl.formatMessage({ id: "main.header.question6" }),
+    1000,
+  ];
+
+  const greetings = [
+    intl.formatMessage({ id: "bot.greeting1" }),
+    intl.formatMessage({ id: "bot.greeting2" }),
+    intl.formatMessage({ id: "bot.greeting3" }),
+    intl.formatMessage({ id: "bot.greeting4" }),
+    intl.formatMessage({ id: "bot.greeting5" }),
+    intl.formatMessage({ id: "bot.greeting6" }),
+  ];
 
   const handleFocus = () => {
     if (inputRef.current) {
@@ -55,7 +53,7 @@ const Header = ({ title, description }: Props) => {
   // Scroll işlemini takip et
   useEffect(() => {
     const handleScroll = () => {
-      const pow = window.innerWidth > 768 ? 0.6 : 0.8;
+      const pow = window.innerWidth > 768 ? 0.5 : 0.7;
       const headerHeight = window.innerHeight * pow;
       if (location.pathname !== "/") {
         setShowBot(true);
@@ -74,12 +72,12 @@ const Header = ({ title, description }: Props) => {
     setGreeting(randomGreeting);
   }, [showBot]);
   return (
-    <div className="h-[90vh] md:h-[70vh] flex flex-col md:flex-row items-center justify-center bg-gradient-to-r from-indigo-500 to-blue-500 dark:from-background-darkAlt3 dark:to-background-darkAlt2 relative px-4">
+    <div className="h-[70vh] md:h-[50vh] flex flex-col md:flex-row items-center justify-center bg-gradient-to-r from-indigo-500 to-blue-500 dark:from-background-darkAlt3 dark:to-background-darkAlt2 relative px-4">
       <div className="flex flex-col items-center order-2 md:order-1 z-20 max-w-[700px]">
         <h1 className="text-2xl md:text-5xl text-center font-bold text-white z-10 font-outfit">
           {title}
         </h1>
-        <p className="text-sm md:text-base text-center text-white mt-1 z-10 ">
+        <p className="text-base md:text-base text-center text-white mt-1 z-10 ">
           {description}
         </p>
         <div className="w-full relative mt-6 mb-2 text-white">

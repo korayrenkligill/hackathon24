@@ -9,55 +9,16 @@ import { TfiClose } from "react-icons/tfi";
 import { useWindowWidth } from "../../hooks/windowsWidth";
 import { motion } from "framer-motion";
 import ForumItemFc, { ForumItem } from "../../components/Forum/Forum";
-
-const forumData: ForumItem[] = [
-  {
-    id: 1,
-    title: "How to Create an Effective Design System for Your Team?",
-    status: "Completed",
-    category: "Bug",
-    date: "2 days ago",
-    commentsCount: 1,
-    upvotes: 7,
-    fire: true,
-  },
-  {
-    id: 2,
-    title: "Best Practices in UI Design: Tips and Tricks",
-    status: "Completed",
-    category: "Bug",
-    date: "Apr 14",
-    commentsCount: 5,
-    upvotes: 3,
-  },
-  {
-    id: 3,
-    title:
-      "The Impact of Design Systems on Brand Identity: Examples and Case Studies",
-    status: "Completed",
-    category: "Readings",
-    date: "Mar 17",
-    commentsCount: 3,
-    upvotes: 5,
-    fire: true,
-  },
-  {
-    id: 4,
-    title: "Design Trends 2024: What's the Future Holding?",
-    status: "To-do",
-    category: "Bug",
-    date: "Mar 05",
-    commentsCount: 0,
-    upvotes: 8,
-  },
-];
+import { useIntl } from "react-intl";
+import axios from "axios";
+import { ApiUrls } from "../../api/apiUrls";
 
 export const badges = ["Badge 1", "Badge 2", "Badge 3", "Badge 4", "Badge 5"];
 
 const ForumPage = () => {
   const width = useWindowWidth();
   const [value, setValue] = useState<DatesRangeValue | undefined>(undefined);
-  const [sortType, setSortType] = useState<"sıradan" | "en yeni" | "en eski">(
+  const [sortType, setSortType] = useState<"sıradan" | "enyeni" | "eneski">(
     "sıradan"
   );
 
@@ -80,13 +41,30 @@ const ForumPage = () => {
 
   const changeSort = () => {
     if (sortType === "sıradan") {
-      setSortType("en yeni");
-    } else if (sortType === "en yeni") {
-      setSortType("en eski");
+      setSortType("enyeni");
+    } else if (sortType === "enyeni") {
+      setSortType("eneski");
     } else {
       setSortType("sıradan");
     }
   };
+
+  const intl = useIntl();
+  const [forumData, setForumData] = useState<ForumItem[]>([]);
+
+  const fetchForumData = async () => {
+    try {
+      await axios.get(ApiUrls.forum.forums).then((res) => {
+        setForumData(res.data);
+      });
+    } catch (error) {
+      console.error("Error fetching forum data:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchForumData();
+  }, []);
 
   useEffect(() => {
     if (width < 768) {
@@ -98,17 +76,19 @@ const ForumPage = () => {
   return (
     <div>
       <HeaderShort
-        title="Etkinlikleri Keşfet, Yeni Deneyimlere Katıl!"
-        description="Yeni şeyler öğren, sosyalleş, ve hayalindeki deneyimleri yaşa."
+        title={intl.formatMessage({ id: "forum.header.title" })}
+        description={intl.formatMessage({ id: "forum.header.desc" })}
       />
       <div className="container px-2 mx-auto flex relative mb-8">
         <div
-          className={`p-0 md:p-2 w-full md:w-[320px] fixed md:relative top-[60px] md:top-auto z-[100] h-full md:h-auto transition-all duration-200`}
+          className={`p-0 md:p-2 w-full md:w-[320px] fixed md:relative top-[80px] md:top-auto z-[100] h-full md:h-auto transition-all duration-200`}
           style={{ left: filterBar ? "0%" : "-100%" }}
         >
           <div className="h-full flex flex-col gap-4 rounded-lg overflow-hidden border shadow bg-white border-background-lightAlt1 dark:border-background-darkAlt3 dark:bg-background-darkAlt3 p-3">
             <div className="flex flex-row items-center justify-between">
-              <h1 className="text-lg font-semibold">Filtrele</h1>
+              <h1 className="text-lg font-semibold">
+                {intl.formatMessage({ id: "common.filter" })}
+              </h1>
               <Button
                 variant="transparent"
                 color="gray"
@@ -119,8 +99,7 @@ const ForumPage = () => {
               </Button>
             </div>
             <DatePickerInput
-              label="Zaman Aralığı"
-              placeholder="Bir tarih seçiniz"
+              label={intl.formatMessage({ id: "common.timeRange" })}
               size="md"
               radius="md"
               type="range"
@@ -131,8 +110,7 @@ const ForumPage = () => {
             <Select
               size="md"
               radius="md"
-              label="Kategori"
-              placeholder="Bir kategori seçin"
+              label={intl.formatMessage({ id: "common.category" })}
               data={badges}
               searchable
               classNames={{
@@ -154,14 +132,14 @@ const ForumPage = () => {
                 <FaFilter />
               </Button>
               <h1 className="text-xl font-bold font-outfit text-indigo-500 dark:text-stext-dark">
-                Etkinlik Listesi
+                {intl.formatMessage({ id: "forum.title" })}
               </h1>
             </div>
             <Button
               rightSection={
                 sortType === "sıradan" ? (
                   <MdOutlineSort />
-                ) : sortType === "en yeni" ? (
+                ) : sortType === "enyeni" ? (
                   <FaSortAmountDown />
                 ) : (
                   <FaSortAmountDownAlt />
@@ -171,7 +149,7 @@ const ForumPage = () => {
               color="gray"
               onClick={changeSort}
             >
-              {sortType}
+              {intl.formatMessage({ id: `sort.${sortType}` })}
             </Button>
           </div>
           <motion.div
@@ -182,7 +160,7 @@ const ForumPage = () => {
           >
             {forumData.map((item) => (
               <motion.div variants={itemVariants}>
-                <ForumItemFc key={item.id} item={item} />
+                <ForumItemFc key={item._id} item={item} />
               </motion.div>
             ))}
           </motion.div>

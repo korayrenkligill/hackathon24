@@ -1,10 +1,10 @@
 import { TypeAnimation } from "react-type-animation";
 import RandomIconGrid from "./RandomIconGrid";
 import { LuSearch } from "react-icons/lu";
-import { greetings, texts } from "./Header";
 import React, { useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
+import { useIntl } from "react-intl";
 
 type Props = {
   title: string;
@@ -12,6 +12,7 @@ type Props = {
 };
 
 const HeaderShort = ({ title, description }: Props) => {
+  const intl = useIntl();
   const location = useLocation();
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -24,6 +25,30 @@ const HeaderShort = ({ title, description }: Props) => {
       inputRef.current.focus();
     }
   };
+
+  const texts = [
+    intl.formatMessage({ id: "main.header.question1" }),
+    1000,
+    intl.formatMessage({ id: "main.header.question2" }),
+    1000,
+    intl.formatMessage({ id: "main.header.question3" }),
+    1000,
+    intl.formatMessage({ id: "main.header.question4" }),
+    1000,
+    intl.formatMessage({ id: "main.header.question5" }),
+    1000,
+    intl.formatMessage({ id: "main.header.question6" }),
+    1000,
+  ];
+
+  const greetings = [
+    intl.formatMessage({ id: "bot.greeting1" }),
+    intl.formatMessage({ id: "bot.greeting2" }),
+    intl.formatMessage({ id: "bot.greeting3" }),
+    intl.formatMessage({ id: "bot.greeting4" }),
+    intl.formatMessage({ id: "bot.greeting5" }),
+    intl.formatMessage({ id: "bot.greeting6" }),
+  ];
 
   // Scroll işlemini takip et
   useEffect(() => {
@@ -52,7 +77,7 @@ const HeaderShort = ({ title, description }: Props) => {
         <h1 className="text-2xl md:text-5xl text-center font-bold text-white z-10 font-outfit">
           {title}
         </h1>
-        <p className="text-sm md:text-base text-center text-white mt-1 z-10 ">
+        <p className="text-base md:text-base text-center text-white mt-1 z-10 ">
           {description}
         </p>
         <div className="w-full relative mt-6 mb-2 text-white">

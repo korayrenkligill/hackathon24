@@ -9,8 +9,12 @@ import { FaFilter } from "react-icons/fa6";
 import { TfiClose } from "react-icons/tfi";
 import { useWindowWidth } from "../../hooks/windowsWidth";
 import { motion } from "framer-motion";
-import events from "../../assets/temp/events.json";
 import { EventType } from "../../interfaces/Event";
+import axios from "../../utils/axiosConfig";
+import { ApiUrls } from "../../api/apiUrls";
+import { useAtomValue } from "jotai";
+import userAtom from "../../store/User";
+import { useNavigate } from "react-router-dom";
 
 export const cities = [
   "Adana",
@@ -99,6 +103,9 @@ export const badges = ["Badge 1", "Badge 2", "Badge 3", "Badge 4", "Badge 5"];
 
 const EventListPage = () => {
   const width = useWindowWidth();
+  const user = useAtomValue(userAtom);
+  const navigation = useNavigate();
+
   const [value, setValue] = useState<DatesRangeValue | undefined>(undefined);
   const [sortType, setSortType] = useState<"sıradan" | "en yeni" | "en eski">(
     "sıradan"
@@ -138,6 +145,20 @@ const EventListPage = () => {
       setFilterBar(true);
     }
   }, [width]);
+
+  const [events, setEvents] = useState<EventType[]>([]);
+  const getEvents = async () => {
+    try {
+      await axios.get(ApiUrls.events.events).then((res) => {
+        setEvents(res.data);
+      });
+    } catch (error: any) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    getEvents();
+  }, []);
   return (
     <div>
       <HeaderShort
@@ -146,7 +167,7 @@ const EventListPage = () => {
       />
       <div className="container px-2 mx-auto flex relative mb-8">
         <div
-          className={`p-0 md:p-2 w-full md:w-[320px] fixed md:relative top-[60px] md:top-auto z-[100] h-full md:h-auto transition-all duration-200`}
+          className={`p-0 md:p-2 w-full md:w-[320px] fixed md:relative top-[80px] md:top-auto z-[100] h-full md:h-auto transition-all duration-200`}
           style={{ left: filterBar ? "0%" : "-100%" }}
         >
           <div className="h-full flex flex-col gap-4 rounded-lg overflow-hidden border shadow bg-white border-background-lightAlt1 dark:border-background-darkAlt3 dark:bg-background-darkAlt3 p-3">
@@ -161,6 +182,18 @@ const EventListPage = () => {
                 <TfiClose />
               </Button>
             </div>
+            {user && user.userType !== "young" && (
+              <Button
+                color="indigo"
+                radius="md"
+                size="md"
+                onClick={() => {
+                  navigation("/etkinlik-olustur");
+                }}
+              >
+                Etkinlik Oluştur
+              </Button>
+            )}
             <DatePickerInput
               label="Zaman Aralığı"
               placeholder="Bir tarih seçiniz"

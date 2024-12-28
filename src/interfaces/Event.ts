@@ -14,4 +14,5 @@ export interface EventType {
   approved?: boolean;
   createdAt?: string;
   image: string;
+  fileName?: string;
 }

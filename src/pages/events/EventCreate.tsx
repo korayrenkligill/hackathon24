@@ -97,9 +97,6 @@ const EventCreate = () => {
   };
 
   const createEvent = async () => {
-    // let fileResp = undefined;
-    // if (file) fileResp = await fileUpload(file);
-
     let badgeResp = undefined;
     if (badge) badgeResp = await fileUpload(badge);
 
@@ -120,6 +117,7 @@ const EventCreate = () => {
       badge: badgeResponse.data._id,
       url: link ?? "",
       organizer: user?._id,
+      ...(file && { image: await fileUpload(file) }),
     });
   };
 

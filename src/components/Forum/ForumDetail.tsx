@@ -55,6 +55,15 @@ const ForumDetail = (props: Props) => {
       });
     } catch (error) {}
   };
+  const DisslikeComment = async () => {
+    try {
+      await axios
+        .post(`${ApiUrls.forum.forums}/${id}/disslikes`)
+        .then((res) => {
+          console.log(res.data);
+        });
+    } catch (error) {}
+  };
   useEffect(() => {
     getForumDetail();
   }, []);
@@ -90,10 +99,16 @@ const ForumDetail = (props: Props) => {
                 {forum.likes.length - forum.disslikes.length}
               </span>
             </div>
-            <button className="text-base text-text-light dark:text-ttext-dark">
+            <button
+              className="text-base text-text-light dark:text-ttext-dark"
+              onClick={likeComment}
+            >
               <BiSolidUpArrow />
             </button>
-            <button className="text-base text-text-light dark:text-ttext-dark">
+            <button
+              className="text-base text-text-light dark:text-ttext-dark"
+              onClick={DisslikeComment}
+            >
               <BiSolidDownArrow />
             </button>
           </div>

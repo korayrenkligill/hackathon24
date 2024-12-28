@@ -33,8 +33,8 @@ const Event = ({ event }: { event: EventType }) => {
       >
         <img
           src={
-            event.image
-              ? `http://176.96.131.145:5000/files/${event.image}`
+            event.fileName
+              ? `http://176.96.131.145:5000/files/${event.fileName}`
               : "https://picsum.photos/600/600"
           }
           alt=""

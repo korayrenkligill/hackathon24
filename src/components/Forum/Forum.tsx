@@ -5,6 +5,8 @@ import * as animationData from "../../assets/lottie/fire.json";
 import Lottie from "react-lottie";
 import { useNavigate } from "react-router-dom";
 import { formatDateToDayMonthYear } from "../../utils/dateConverter";
+import axios from "../../utils/axiosConfig";
+import { ApiUrls } from "../../api/apiUrls";
 
 export interface ForumItem {
   _id: string;
@@ -38,6 +40,22 @@ const ForumItemFc: React.FC<{ item: ForumItem }> = ({ item }) => {
       preserveAspectRatio: "xMidYMid slice",
     },
   };
+  const likeComment = async (id: string) => {
+    try {
+      await axios.post(`${ApiUrls.forum.forums}/${id}/likes`).then((res) => {
+        console.log(res.data);
+      });
+    } catch (error) {}
+  };
+  const DisslikeComment = async (id: string) => {
+    try {
+      await axios
+        .post(`${ApiUrls.forum.forums}/${id}/disslikes`)
+        .then((res) => {
+          console.log(res.data);
+        });
+    } catch (error) {}
+  };
   return (
     <div
       className="flex justify-between border-b border-gray-200 dark:border-gray-700 py-4"
@@ -69,10 +87,22 @@ const ForumItemFc: React.FC<{ item: ForumItem }> = ({ item }) => {
               {item.likes.length - item.disslikes.length}
             </span>
           </div>
-          <button className="text-base text-text-light dark:text-ttext-dark">
+          <button
+            className="text-base text-text-light dark:text-ttext-dark"
+            onClick={(e) => {
+              e.stopPropagation();
+              likeComment(item._id);
+            }}
+          >
             <BiSolidUpArrow />
           </button>
-          <button className="text-base text-text-light dark:text-ttext-dark">
+          <button
+            className="text-base text-text-light dark:text-ttext-dark"
+            onClick={(e) => {
+              e.stopPropagation();
+              DisslikeComment(item._id);
+            }}
+          >
             <BiSolidDownArrow />
           </button>
         </div>

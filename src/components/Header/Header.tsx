@@ -5,6 +5,8 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useLocation } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import { useIntl } from "react-intl";
+import { useAtom } from "jotai";
+import { chatPopUpAtom } from "../../layouts/Main";
 
 type Props = {
   title: string;
@@ -18,6 +20,7 @@ const Header = ({ title, description }: Props) => {
 
   const [showBot, setShowBot] = useState(false);
   const [greeting, setGreeting] = useState("");
+  const [isPopupOpen, setIsPopupOpen] = useAtom(chatPopUpAtom);
 
   const texts = [
     intl.formatMessage({ id: "main.header.question1" }),
@@ -80,14 +83,20 @@ const Header = ({ title, description }: Props) => {
         <p className="text-base md:text-base text-center text-white mt-1 z-10 ">
           {description}
         </p>
-        <div className="w-full relative mt-6 mb-2 text-white">
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            setIsPopupOpen(true);
+          }}
+          className="w-full relative mt-6 mb-2 text-white"
+        >
           <LuSearch className="absolute top-1/2 -translate-y-1/2 left-3 text-3xl" />
           <input
             ref={inputRef}
             type="text"
             className="w-full py-3 px-3 pl-12 outline-none rounded-full border bg-white/20"
           />
-        </div>
+        </form>
         <TypeAnimation
           sequence={texts}
           speed={50}

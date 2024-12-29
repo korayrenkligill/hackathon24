@@ -1,17 +1,21 @@
 import { Button } from "@mantine/core";
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 type Props = {};
 
 const StartNow = (props: Props) => {
+  const navigation = useNavigate();
   return (
     <div className="p-8 flex flex-col gap-3 items-center justify-center bg-indigo-600 my-12 rounded-xl text-white">
-      <h1 className="text-5xl font-bold font-outfit">Logo</h1>
-      <p>
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Dignissimos,
-        totam.
-      </p>
-      <Button variant="filled" color="white" className="text-indigo-600">
+      <img src="/logo.png" className="w-16 " alt="" />
+      <p>GençLink Sayesinde Sosyalleşmek Artık Çok Kolay</p>
+      <Button
+        variant="filled"
+        color="white"
+        className="text-indigo-600"
+        onClick={() => navigation("/etkinlik-listesi")}
+      >
         Start Now
       </Button>
     </div>

@@ -9,9 +9,7 @@ import { useEffect, useState } from "react";
 import { Button } from "@mantine/core";
 import Event from "../../components/Event/Event";
 import { motion } from "framer-motion";
-import { EventType } from "../../interfaces/Event";
-import { ApiUrls } from "../../api/apiUrls";
-import axios from "../../utils/axiosConfig";
+import { Event as EventType } from "../../interfaces/GlobalTypes";
 
 interface geoMarker {
   name: string;
@@ -153,18 +151,15 @@ const EventMap = () => {
   };
 
   const [events, setEvents] = useState<EventType[]>([]);
-  const getEvents = async () => {
-    try {
-      await axios.get(ApiUrls.events.events).then((res) => {
-        setEvents(res.data);
-      });
-    } catch (error: any) {
-      console.log(error);
-    }
-  };
+
   useEffect(() => {
-    getEvents();
+    let _events = localStorage.getItem("events");
+
+    if (_events) {
+      setEvents(JSON.parse(_events));
+    }
   }, []);
+
   return (
     <div>
       <div className="max-w-screen max-h-screen overflow-auto bg-gradient-to-r from-indigo-500 to-blue-500 dark:from-background-darkAlt3 dark:to-background-darkAlt2">
@@ -254,7 +249,7 @@ const EventMap = () => {
           {selectedCity &&
             events.map((event, index) => (
               <motion.div variants={itemVariants} key={index}>
-                <Event event={event as EventType} />
+                <Event event={event} />
               </motion.div>
             ))}
         </motion.div>

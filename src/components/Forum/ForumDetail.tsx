@@ -1,22 +1,29 @@
-import axios from "axios";
 import React, { useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { ApiUrls } from "../../api/apiUrls";
 import { FaCommentAlt } from "react-icons/fa";
-import { ForumItem } from "./Forum";
 import Lottie from "react-lottie";
 import * as animationData from "../../assets/lottie/fire.json";
 import { BiSolidDownArrow, BiSolidUpArrow } from "react-icons/bi";
 import { formatDateToDayMonthYear } from "../../utils/dateConverter";
 import { useIntl } from "react-intl";
 import { Button } from "@mantine/core";
+import {
+  addCommentToForum,
+  dislikeForum,
+  Forum,
+  getForumById,
+  getUserById,
+  likeForum,
+  User,
+} from "../../interfaces/GlobalTypes";
+import { v4 as uuidv4 } from "uuid";
 
 type Props = {};
 
 const ForumDetail = (props: Props) => {
   const { id } = useParams();
   const intl = useIntl();
-  const [forum, setForum] = React.useState<ForumItem | null>(null);
+  const [forum, setForum] = React.useState<Forum | null>(null);
   const defaultOptions = {
     loop: true,
     autoplay: true,
@@ -25,48 +32,23 @@ const ForumDetail = (props: Props) => {
       preserveAspectRatio: "xMidYMid slice",
     },
   };
+  const [user, setUser] = React.useState<User | null>(null);
 
   const [comment, setComment] = React.useState<string>("");
-  const getForumDetail = async () => {
-    try {
-      const response = await axios
-        .get(`${ApiUrls.forum.forums}/${id}`)
-        .then((res) => {
-          setForum(res.data);
-        });
-    } catch (error) {}
-  };
 
-  const sendComment = async () => {
-    try {
-      await axios
-        .post(`${ApiUrls.forum.forums}/${id}/comments`, {
-          content: comment,
-        })
-        .then((res) => {
-          console.log(res.data);
-        });
-    } catch (error) {}
-  };
-  const likeComment = async () => {
-    try {
-      await axios.post(`${ApiUrls.forum.forums}/${id}/likes`).then((res) => {
-        console.log(res.data);
-      });
-    } catch (error) {}
-  };
-  const DisslikeComment = async () => {
-    try {
-      await axios
-        .post(`${ApiUrls.forum.forums}/${id}/disslikes`)
-        .then((res) => {
-          console.log(res.data);
-        });
-    } catch (error) {}
-  };
   useEffect(() => {
-    getForumDetail();
-  }, []);
+    if (id) {
+      const resp = getForumById(id);
+      if (resp.isOk) {
+        setForum(resp.forum!);
+      }
+      const user = getUserById(resp.forum!.author).user;
+      if (user) {
+        setUser(user);
+      }
+    }
+  }, [id]);
+
   if (!forum) {
     return <div>Loading...</div>;
   }
@@ -76,7 +58,7 @@ const ForumDetail = (props: Props) => {
         <div className="flex items-start gap-4">
           <div className="flex flex-col items-center gap-2">
             <div className="relative z-10">
-              {forum?.likes.length - forum?.disslikes.length > 5 && (
+              {forum?.likes - forum?.dislikes > 5 && (
                 <Lottie
                   options={defaultOptions}
                   style={{
@@ -91,23 +73,27 @@ const ForumDetail = (props: Props) => {
               )}
               <span
                 className={`text-lg font-bold text-ttext-light dark:text-ttext-dark w-[20px] h-[20px] rounded-full flex items-center justify-center ${
-                  forum.likes.length - forum.disslikes.length > 5
+                  forum.likes - forum.dislikes > 5
                     ? "bg-white !text-black text-base"
                     : ""
                 }`}
               >
-                {forum.likes.length - forum.disslikes.length}
+                {forum.likes - forum.dislikes}
               </span>
             </div>
             <button
               className="text-base text-text-light dark:text-ttext-dark"
-              onClick={likeComment}
+              onClick={() => {
+                likeForum(id!);
+              }}
             >
               <BiSolidUpArrow />
             </button>
             <button
+              onClick={() => {
+                dislikeForum(id!);
+              }}
               className="text-base text-text-light dark:text-ttext-dark"
-              onClick={DisslikeComment}
             >
               <BiSolidDownArrow />
             </button>
@@ -117,13 +103,13 @@ const ForumDetail = (props: Props) => {
               {forum.title}
             </h3>
             <div className="mt-1 flex items-center gap-2 text-base text-stext-light dark:text-stext-dark">
-              {forum.tags.map((tag) => (
+              {/* {forum.tags.map((tag) => (
                 <span
                   className={`px-2 py-1 rounded-full text-white bg-blue-500`}
                 >
                   {tag}
                 </span>
-              ))}
+              ))} */}
               <span>{formatDateToDayMonthYear(forum.createdAt)}</span>
             </div>
           </div>
@@ -137,28 +123,35 @@ const ForumDetail = (props: Props) => {
       <div className="p-4 rounded-xl bg-white dark:bg-background-darkAlt3 shadow mb-8">
         {forum.content}
       </div>
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          sendComment();
-        }}
-        className="flex flex-col items-end"
-      >
-        <textarea
-          className="w-full p-4 rounded-lg bg-white dark:bg-background-darkAlt3 outline-none shadow-md mb-4"
-          placeholder={intl.formatMessage({ id: "forum.comment" })}
-          onChange={(e) => setComment(e.target.value)}
-          value={comment}
-        />
-        <Button type="submit" variant="filled" color="yellow">
-          {intl.formatMessage({ id: "common.send" })}
-        </Button>
-      </form>
+      {localStorage.getItem("lu") && (
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            addCommentToForum(id!, {
+              id: uuidv4(),
+              author: JSON.parse(localStorage.getItem("lu")!).id,
+              content: comment,
+              createdAt: new Date().toISOString(),
+            });
+          }}
+          className="flex flex-col items-end"
+        >
+          <textarea
+            className="w-full p-4 rounded-lg bg-white dark:bg-background-darkAlt3 outline-none shadow-md mb-4"
+            placeholder={intl.formatMessage({ id: "forum.comment" })}
+            onChange={(e) => setComment(e.target.value)}
+            value={comment}
+          />
+          <Button type="submit" variant="filled" color="yellow">
+            {intl.formatMessage({ id: "common.send" })}
+          </Button>
+        </form>
+      )}
       <div className="flex flex-col gap-4 my-8">
         {forum.comments.map((comment) => (
           <div className="p-4 rounded-xl bg-white dark:bg-background-darkAlt3/80 shadow">
             <h3 className="text-lg font-semibold text-text-light dark:text-text-dark">
-              {comment.user.name}
+              {getUserById(comment.author).user?.name ?? "-"}
             </h3>
             <p className="mt-2 text-base text-stext-light dark:text-stext-dark">
               {comment.content}

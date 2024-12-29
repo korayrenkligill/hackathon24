@@ -1,32 +1,45 @@
 import { Button, TextInput } from "@mantine/core";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
-import { ApiUrls } from "../../api/apiUrls";
 import { useState } from "react";
-import { User } from "../../interfaces/User";
+import { v4 as uuidv4 } from "uuid";
 import { toast } from "react-toastify";
 import { useIntl } from "react-intl";
+import { addUser } from "../../interfaces/GlobalTypes";
 
 const RegisterPage = () => {
   const intl = useIntl();
   const navigation = useNavigate();
   const [passAgain, setPassAgain] = useState<string>("");
-  const [userData, setUserData] = useState<User>({
+  const [userData, setUserData] = useState({
     name: "",
     email: "",
     password: "",
-    userType: "young",
   });
-  const Register = async () => {
-    try {
-      const response = await axios.post(ApiUrls.users.register, userData);
-      navigation("/giris-yap");
-      return response.data;
-    } catch (error: any) {
-      toast.error("Hesap oluşturulamadı!");
+
+  const Register = () => {
+    if (userData.password !== passAgain) {
+      toast.error(intl.formatMessage({ id: "register.error" }));
       return;
     }
+    const resp = addUser({
+      id: uuidv4(),
+      name: userData.name,
+      email: userData.email,
+      password: userData.password,
+      userType: "genc",
+      badges: [],
+      blogs: [],
+      createdAt: new Date().toISOString(),
+      socialMedias: {},
+    });
+    if (!resp.isOk) {
+      toast.error(resp.message);
+      return;
+    }
+    toast.success(intl.formatMessage({ id: "register.success" }));
+    navigation("/giris-yap");
   };
+
   return (
     <div
       className="flex flex-col items-center justify-center px-4 relative z-10"
@@ -40,10 +53,6 @@ const RegisterPage = () => {
         <form
           onSubmit={(e) => {
             e.preventDefault();
-            if (userData.password !== passAgain) {
-              toast.warn(intl.formatMessage({ id: "error.passwordNotMatch" }));
-              return;
-            }
             Register();
           }}
           className="flex flex-col gap-4 w-full"

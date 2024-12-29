@@ -3,13 +3,14 @@ import {
   FileButton,
   Group,
   Input,
+  MultiSelect,
   NumberInput,
   Select,
   Stepper,
   Textarea,
   TextInput,
 } from "@mantine/core";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { RichTextEditor, Link } from "@mantine/tiptap";
 import { useEditor } from "@tiptap/react";
 import Highlight from "@tiptap/extension-highlight";
@@ -19,36 +20,53 @@ import TextAlign from "@tiptap/extension-text-align";
 import Superscript from "@tiptap/extension-superscript";
 import SubScript from "@tiptap/extension-subscript";
 import { DatePickerInput } from "@mantine/dates";
-import axios from "../../utils/axiosConfig";
-import { ApiUrls } from "../../api/apiUrls";
+import { MdFileUpload } from "react-icons/md";
+import { useIntl } from "react-intl";
+import {
+  addBadge,
+  addEvent,
+  EventType,
+  User,
+} from "../../interfaces/GlobalTypes";
+import { v4 as uuidv4 } from "uuid";
+import { convertFileToBase64 } from "../../utils/imageToBase64";
 import { toast } from "react-toastify";
-import { url } from "inspector";
-import { useAtomValue } from "jotai";
-import userAtom from "../../store/User";
+import { useNavigate } from "react-router-dom";
+
+const options = [
+  "Atölye Çalışmaları",
+  "Seminerler ve Konferanslar",
+  "Sosyal Sorumluluk Projeleri",
+  "Spor Etkinlikleri",
+  "Kültürel Geziler",
+  "Networking Etkinlikleri",
+  "Sanat ve Yaratıcılık Atölyeleri",
+  "Müzik ve Eğlence",
+  "Lise Öğrencileri",
+  "Üniversite Öğrencileri",
+  "Yeni Mezunlar",
+  "Ücretsiz",
+  "Ücretli",
+];
 
 const EventCreate = () => {
-  const user = useAtomValue(userAtom);
   const resetRef = useRef<() => void>(null);
+  const intl = useIntl();
+  const navigation = useNavigate();
   const [file, setFile] = useState<File | null>(null);
-  const [badge, setBadge] = useState<File | null>(null);
-
-  const clearFile = () => {
-    setFile(null);
-    resetRef.current?.();
-  };
 
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState<string[]>([]);
   const [address, setAddress] = useState("");
 
   const [value, setValue] = useState<Date | null>(null);
 
-  const [selectedType, setSelectedType] = useState<string | null>(
-    "Bilgilendirme"
-  );
+  const [selectedType, setSelectedType] = useState<string | null>("duyuru");
 
   const [link, setLink] = useState("");
   const [name, setName] = useState("");
+  const [icon, setIcon] = useState("");
   const [description, setDescription] = useState("");
   const [point, setPoint] = useState("");
 
@@ -70,71 +88,65 @@ const EventCreate = () => {
 
   const [active, setActive] = useState(0);
 
-  const fileUpload = async (_file: File) => {
-    if (!_file) {
-      console.error("Dosya seçilmedi.");
+  const AddBadge = () => {
+    const tempId = uuidv4();
+    const resp = addBadge({
+      id: tempId,
+      name: name,
+      emoji: icon,
+      point: Number(point),
+      details: description,
+      eventType: selectedType as "duyuru" | "katılım" | "bağlantı",
+      createdAt: new Date().toISOString(),
+    });
+    if (!resp.isOk) {
+      toast.error(resp.message);
       return;
     }
-
-    const formData = new FormData();
-    formData.append("file", _file); // `file` inputtan gelen dosya olmalı
-
-    try {
-      const response = await axios
-        .post(ApiUrls.fileUpload.fileUpload, formData, {
-          headers: {
-            accept: "application/json",
-            "Content-Type": "multipart/form-data",
-          },
-        })
-        .then(async (res) => {
-          return res.data;
-        });
-      return response._id;
-    } catch (error) {
-      console.error("Yükleme Hatası:", error);
-    }
+    AddEvent(tempId);
   };
 
-  const createEvent = async () => {
-    let badgeResp = undefined;
-    if (badge) badgeResp = await fileUpload(badge);
+  const AddEvent = async (badgeId: string) => {
+    const user = JSON.parse(localStorage.getItem("lu") || "{}");
+    if (!user.id) return;
 
-    if (!badgeResp) toast.error("Badge yükleme hatası");
-
-    const badgeResponse = await axios.post(ApiUrls.badges.badges, {
-      name,
-      description,
-      point: Number(point),
-      icon: badgeResp,
+    const image = file ? await convertFileToBase64(file) : "";
+    const resp = addEvent({
+      id: uuidv4(),
+      title: title,
+      description: content,
+      organizer: user.id,
+      type: selectedType as "duyuru" | "katılım" | "bağlantı",
+      url: link,
+      badge: badgeId,
+      participants: [],
+      qrCode: "",
+      status: "beklemede",
+      createdAt: new Date().toISOString(),
+      image: image as string,
+      categories: selectedCategory as EventType[],
+      date: value?.toISOString() || new Date().toISOString(),
     });
 
-    await axios.post(ApiUrls.events.events, {
-      title,
-      description,
-      date: value,
-      location: address,
-      badge: badgeResponse.data._id,
-      url: link ?? "",
-      organizer: user?._id,
-      ...(file && { image: await fileUpload(file) }),
-    });
+    if (!resp.isOk) {
+      toast.error(resp.message);
+      return;
+    }
+    navigation("/etkinlik-listesi");
   };
 
-  useEffect(() => {
-    if (active === 3) {
-      createEvent();
-    }
-  }, [active]);
-
-  const nextStep = () =>
+  const nextStep = () => {
     setActive((current) => (current < 3 ? current + 1 : current));
+  };
   const prevStep = () =>
     setActive((current) => (current > 0 ? current - 1 : current));
   return (
     <div className="container mx-auto px-4 my-8">
-      <Stepper active={active} onStepClick={setActive}>
-        <Stepper.Step label="First step" description="Create an account">
+      <Stepper active={active}>
+        <Stepper.Step
+          label={intl.formatMessage({ id: "event.create.step1.label" })}
+          description={intl.formatMessage({ id: "event.create.step1.desc" })}
+        >
           <form
             onSubmit={(e) => {
               e.preventDefault();
@@ -149,6 +161,14 @@ const EventCreate = () => {
               required
               onChange={(e) => setTitle(e.target.value)}
               value={title}
+            />
+            <MultiSelect
+              radius={"md"}
+              size="md"
+              label="Kategoriler"
+              data={options}
+              value={selectedCategory}
+              onChange={setSelectedCategory}
             />
             <Input.Label htmlFor="content" size="md" required>
               Content
@@ -210,10 +230,14 @@ const EventCreate = () => {
               onChange={(e) => setAddress(e.target.value)}
               rows={3}
             />
+
             <Button type="submit">İleri</Button>
           </form>
         </Stepper.Step>
-        <Stepper.Step label="Second step" description="Verify email">
+        <Stepper.Step
+          label={intl.formatMessage({ id: "event.create.step2.label" })}
+          description={intl.formatMessage({ id: "event.create.step2.desc" })}
+        >
           <form
             onSubmit={(e) => {
               e.preventDefault();
@@ -226,37 +250,54 @@ const EventCreate = () => {
               radius={"md"}
               size="md"
               value={value}
+              required
               onChange={setValue}
             />
             <Select
               label="Your favorite library"
               placeholder="Pick value"
-              data={["Bilgilendirme", "Yönlendirmeli", "Katılım Sağlanan"]}
+              data={["duyuru", "bağlantı", "katılım"]}
               value={selectedType}
               onChange={setSelectedType}
               radius={"md"}
+              required
               size="md"
             />
-            {selectedType === "Yönlendirmeli" && (
+            {selectedType === "bağlantı" && (
               <TextInput
                 label="Link"
                 radius={"md"}
                 value={link}
+                className="resize-none"
                 onChange={(e) => setLink(e.target.value)}
                 size="md"
                 required
               />
             )}
 
-            {file && <p>Picked file: {file.name}</p>}
-            <FileButton
-              resetRef={resetRef}
-              onChange={setFile}
-              accept="image/png,image/jpeg"
-            >
-              {(props) => <Button {...props}>Upload image</Button>}
-            </FileButton>
-            <Button type="submit">İleri</Button>
+            <div>
+              <FileButton
+                resetRef={resetRef}
+                onChange={setFile}
+                accept="image/png,image/jpeg"
+              >
+                {(props) => (
+                  <Button
+                    leftSection={<MdFileUpload />}
+                    size="md"
+                    radius="md"
+                    {...props}
+                    className="mt-4"
+                  >
+                    Upload image
+                  </Button>
+                )}
+              </FileButton>
+              {file && <p>Picked file: {file.name}</p>}
+            </div>
+            <Button type="submit" disabled={!file} className="mt-4">
+              İleri
+            </Button>
           </form>
         </Stepper.Step>
         <Stepper.Step label="Final step" description="Get full access">
@@ -264,6 +305,7 @@ const EventCreate = () => {
             onSubmit={(e) => {
               e.preventDefault();
               nextStep();
+              AddBadge();
             }}
             className="flex flex-col gap-2"
           >
@@ -276,6 +318,16 @@ const EventCreate = () => {
               value={name}
             />
             <TextInput
+              label="Rozet İkonu"
+              placeholder="🚀"
+              radius={"md"}
+              size="md"
+              required
+              maxLength={5}
+              onChange={(e) => setIcon(e.target.value)}
+              value={icon}
+            />
+            <TextInput
               label="Description"
               radius={"md"}
               size="md"
@@ -283,15 +335,9 @@ const EventCreate = () => {
               onChange={(e) => setDescription(e.target.value)}
               value={description}
             />
-            {badge && <p>Picked file: {badge.name}</p>}
-            <FileButton
-              resetRef={resetRef}
-              onChange={setBadge}
-              accept="image/png,image/jpeg"
-            >
-              {(props) => <Button {...props}>Upload image</Button>}
-            </FileButton>
+
             <TextInput
+              type="number"
               label="Puan"
               radius={"md"}
               size="md"

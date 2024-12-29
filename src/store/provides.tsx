@@ -9,42 +9,42 @@ export const provides = [
     name: "Etkinlik Listesi",
     icon: <TfiWorld />,
     description:
-      "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Doloremque, repellendus? Et quam at ratione id fugiat repellat, doloremque",
+      " Etkinlik Listesi, kullanıcıların yaklaşan etkinliklere kolayca göz atmasını ve katılım sağlamasını mümkün kılar",
     link: "/etkinlikler",
   },
   {
     name: "Etkinlik Haritası",
     icon: <BsCalendar2DateFill />,
     description:
-      "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Doloremque, repellendus? Et quam at ratione id fugiat repellat, doloremque",
+      "Etkinlik Harita sayfası, kullanıcıların etkinliklerin konumlarını bir harita üzerinden görerek katılım detaylarına kolayca erişmesini sağlar.",
     link: "/etkinlikler",
   },
   {
     name: "Kullanıcı Forumu",
     icon: <FaCircleUser />,
     description:
-      "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Doloremque, repellendus? Et quam at ratione id fugiat repellat, doloremque",
+      "Forum bölümü, kullanıcıların sorularını paylaşabileceği, fikir alışverişinde bulunabileceği ve sosyalleşebileceği bir alan sunar.",
     link: "/etkinlikler",
   },
   {
     name: "Ödüller",
     icon: <FaChartLine />,
     description:
-      "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Doloremque, repellendus? Et quam at ratione id fugiat repellat, doloremque",
+      "Ödüller sayfası, etkinliklerde kazanılan rozetlerin ve ödüllerin detaylarını görüntülemek ve kullanıcıları platformda aktif olmaya teşvik etmek amacıyla tasarlanmıştır.",
     link: "/etkinlikler",
   },
   {
     name: "Hakkımızda",
     icon: <FaMoneyCheckAlt />,
     description:
-      "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Doloremque, repellendus? Et quam at ratione id fugiat repellat, doloremque",
+      " İletişim sayfası, kullanıcıların platformla ilgili sorularını yöneltebileceği ve geri bildirim sağlayabileceği bir destek kanalı görevi görür",
     link: "/etkinlikler",
   },
   {
     name: "İletişim",
     icon: <IoMdCube />,
     description:
-      "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Doloremque, repellendus? Et quam at ratione id fugiat repellat, doloremque",
+      " İletişim sayfası, kullanıcıların platformla ilgili sorularını yöneltebileceği ve geri bildirim sağlayabileceği bir destek kanalı görevi görür",
     link: "/etkinlikler",
   },
 ];

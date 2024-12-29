@@ -5,8 +5,7 @@ import * as animationData from "../../assets/lottie/fire.json";
 import Lottie from "react-lottie";
 import { useNavigate } from "react-router-dom";
 import { formatDateToDayMonthYear } from "../../utils/dateConverter";
-import axios from "../../utils/axiosConfig";
-import { ApiUrls } from "../../api/apiUrls";
+import { dislikeForum, Forum, likeForum } from "../../interfaces/GlobalTypes";
 
 export interface ForumItem {
   _id: string;
@@ -30,7 +29,7 @@ export interface ForumItem {
   createdAt: string;
 }
 
-const ForumItemFc: React.FC<{ item: ForumItem }> = ({ item }) => {
+const ForumItemFc: React.FC<{ item: Forum }> = ({ item }) => {
   const navigation = useNavigate();
   const defaultOptions = {
     loop: true,
@@ -40,31 +39,13 @@ const ForumItemFc: React.FC<{ item: ForumItem }> = ({ item }) => {
       preserveAspectRatio: "xMidYMid slice",
     },
   };
-  const likeComment = async (id: string) => {
-    try {
-      await axios.post(`${ApiUrls.forum.forums}/${id}/likes`).then((res) => {
-        console.log(res.data);
-      });
-    } catch (error) {}
-  };
-  const DisslikeComment = async (id: string) => {
-    try {
-      await axios
-        .post(`${ApiUrls.forum.forums}/${id}/disslikes`)
-        .then((res) => {
-          console.log(res.data);
-        });
-    } catch (error) {}
-  };
+
   return (
-    <div
-      className="flex justify-between border-b border-gray-200 dark:border-gray-700 py-4"
-      onClick={() => navigation(`/forum/${item._id}`)}
-    >
+    <div className="flex justify-between border-b border-gray-200 dark:border-gray-700 py-4">
       <div className="flex items-start gap-4">
         <div className="flex flex-col items-center gap-2">
           <div className="relative z-10">
-            {item.likes.length - item.disslikes.length > 5 && (
+            {item.likes - item.dislikes > 5 && (
               <Lottie
                 options={defaultOptions}
                 style={{
@@ -79,19 +60,19 @@ const ForumItemFc: React.FC<{ item: ForumItem }> = ({ item }) => {
             )}
             <span
               className={`text-lg font-bold text-ttext-light dark:text-ttext-dark w-[20px] h-[20px] rounded-full flex items-center justify-center ${
-                item.likes.length - item.disslikes.length > 5
+                item.likes - item.dislikes > 5
                   ? "bg-white !text-black text-base"
                   : ""
               }`}
             >
-              {item.likes.length - item.disslikes.length}
+              {item.likes - item.dislikes}
             </span>
           </div>
           <button
             className="text-base text-text-light dark:text-ttext-dark"
             onClick={(e) => {
               e.stopPropagation();
-              likeComment(item._id);
+              likeForum(item.id);
             }}
           >
             <BiSolidUpArrow />
@@ -100,29 +81,32 @@ const ForumItemFc: React.FC<{ item: ForumItem }> = ({ item }) => {
             className="text-base text-text-light dark:text-ttext-dark"
             onClick={(e) => {
               e.stopPropagation();
-              DisslikeComment(item._id);
+              dislikeForum(item.id);
             }}
           >
             <BiSolidDownArrow />
           </button>
         </div>
         <div>
-          <h3 className="text-lg font-semibold text-text-light dark:text-text-dark hover:underline cursor-pointer">
+          <h3
+            className="text-lg font-semibold text-text-light dark:text-text-dark hover:underline cursor-pointer"
+            onClick={() => navigation(`/forum/${item.id}`)}
+          >
             {item.title}
           </h3>
           <div className="mt-1 flex items-center gap-2 text-base text-stext-light dark:text-stext-dark">
-            {item.tags.map((tag) => (
+            {/* {item.tags.map((tag) => (
               <span className={`px-2 py-1 rounded-full text-white bg-blue-500`}>
                 {tag}
               </span>
-            ))}
+            ))} */}
             <span>{formatDateToDayMonthYear(item.createdAt)}</span>
           </div>
         </div>
       </div>
       <div className="flex flex-col items-end justify-between gap-2 text-base">
         <span className="mt-auto flex items-center gap-2 text-text-light dark:text-text-dark">
-          {item.comments.length} <FaCommentAlt />
+          {item?.comments?.length ?? 0} <FaCommentAlt />
         </span>
       </div>
     </div>

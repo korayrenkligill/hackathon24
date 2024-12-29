@@ -1,27 +1,22 @@
 import { Carousel } from "@mantine/carousel";
 import Event from "../Event/Event";
-import { EventType } from "../../interfaces/Event";
-import axios from "../../utils/axiosConfig";
-import { ApiUrls } from "../../api/apiUrls";
 import { useEffect, useState } from "react";
 import { useIntl } from "react-intl";
 import { Link } from "react-router-dom";
+import {
+  Event as EventType,
+  getLastAddedEvents,
+} from "../../interfaces/GlobalTypes";
 
 const LastestEvents = () => {
   const intl = useIntl();
   const [events, setEvents] = useState<EventType[]>([]);
-  const getEvents = async () => {
-    try {
-      await axios.get(ApiUrls.events.events).then((res) => {
-        setEvents(res.data);
-      });
-    } catch (error: any) {
-      console.log(error);
-    }
-  };
+
   useEffect(() => {
-    getEvents();
+    const storedEvents = getLastAddedEvents();
+    setEvents(storedEvents);
   }, []);
+
   return (
     <div className="my-12">
       <Carousel
@@ -36,7 +31,7 @@ const LastestEvents = () => {
         {events.map((event, index) => (
           <Carousel.Slide key={index}>
             <div className="p-2">
-              <Event event={event as EventType} />
+              <Event event={event} />
             </div>
           </Carousel.Slide>
         ))}

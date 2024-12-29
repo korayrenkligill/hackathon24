@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import HeaderShort from "../../components/Header/HeaderShort";
 import { DatePickerInput, DatesRangeValue } from "@mantine/dates";
-import { Button, Select } from "@mantine/core";
+import { Button, MultiSelect, Select } from "@mantine/core";
 import { FaSortAmountDown, FaSortAmountDownAlt } from "react-icons/fa";
 import { MdOutlineSort } from "react-icons/md";
 import Event from "../../components/Event/Event";
@@ -9,12 +9,10 @@ import { FaFilter } from "react-icons/fa6";
 import { TfiClose } from "react-icons/tfi";
 import { useWindowWidth } from "../../hooks/windowsWidth";
 import { motion } from "framer-motion";
-import { EventType } from "../../interfaces/Event";
-import axios from "../../utils/axiosConfig";
-import { ApiUrls } from "../../api/apiUrls";
 import { useAtomValue } from "jotai";
 import userAtom from "../../store/User";
 import { useNavigate } from "react-router-dom";
+import { Event as EventType } from "../../interfaces/GlobalTypes";
 
 export const cities = [
   "Adana",
@@ -99,8 +97,21 @@ export const cities = [
   "Yozgat",
   "Zonguldak",
 ];
-export const badges = ["Badge 1", "Badge 2", "Badge 3", "Badge 4", "Badge 5"];
-
+export const badges = [
+  "Atölye Çalışmaları",
+  "Seminerler ve Konferanslar",
+  "Sosyal Sorumluluk Projeleri",
+  "Spor Etkinlikleri",
+  "Kültürel Geziler",
+  "Networking Etkinlikleri",
+  "Sanat ve Yaratıcılık Atölyeleri",
+  "Müzik ve Eğlence",
+  "Lise Öğrencileri",
+  "Üniversite Öğrencileri",
+  "Yeni Mezunlar",
+  "Ücretsiz",
+  "Ücretli",
+];
 const EventListPage = () => {
   const width = useWindowWidth();
   const user = useAtomValue(userAtom);
@@ -110,6 +121,9 @@ const EventListPage = () => {
   const [sortType, setSortType] = useState<"sıradan" | "en yeni" | "en eski">(
     "sıradan"
   );
+
+  const [city, setCity] = useState<string | null>("");
+  const [categories, setCategories] = useState<string[]>([]);
 
   const [filterBar, setFilterBar] = useState<boolean>(false);
 
@@ -147,18 +161,14 @@ const EventListPage = () => {
   }, [width]);
 
   const [events, setEvents] = useState<EventType[]>([]);
-  const getEvents = async () => {
-    try {
-      await axios.get(ApiUrls.events.events).then((res) => {
-        setEvents(res.data);
-      });
-    } catch (error: any) {
-      console.log(error);
-    }
-  };
+
   useEffect(() => {
-    getEvents();
+    const storedEvents = localStorage.getItem("events");
+    if (storedEvents) {
+      setEvents(JSON.parse(storedEvents));
+    }
   }, []);
+
   return (
     <div>
       <HeaderShort
@@ -166,80 +176,21 @@ const EventListPage = () => {
         description="Yeni şeyler öğren, sosyalleş, ve hayalindeki deneyimleri yaşa."
       />
       <div className="container px-2 mx-auto flex relative mb-8">
-        <div
-          className={`p-0 md:p-2 w-full md:w-[320px] fixed md:relative top-[80px] md:top-auto z-[100] h-full md:h-auto transition-all duration-200`}
-          style={{ left: filterBar ? "0%" : "-100%" }}
-        >
-          <div className="h-full flex flex-col gap-4 rounded-lg overflow-hidden border shadow bg-white border-background-lightAlt1 dark:border-background-darkAlt3 dark:bg-background-darkAlt3 p-3">
-            <div className="flex flex-row items-center justify-between">
-              <h1 className="text-lg font-semibold">Filtrele</h1>
-              <Button
-                variant="transparent"
-                color="gray"
-                className="md:hidden"
-                onClick={() => setFilterBar(false)}
-              >
-                <TfiClose />
-              </Button>
-            </div>
-            {user && user.userType !== "young" && (
-              <Button
-                color="indigo"
-                radius="md"
-                size="md"
-                onClick={() => {
-                  navigation("/etkinlik-olustur");
-                }}
-              >
-                Etkinlik Oluştur
-              </Button>
-            )}
-            <DatePickerInput
-              label="Zaman Aralığı"
-              placeholder="Bir tarih seçiniz"
-              size="md"
-              radius="md"
-              type="range"
-              value={value}
-              onChange={setValue}
-            />
-            <Select
-              size="md"
-              radius="md"
-              label="Şehir"
-              placeholder="Bir şehir seçin"
-              data={cities}
-              searchable
-              classNames={{
-                input:
-                  "border-gray-300 focus:border-blue-500 focus:ring-blue-500",
-              }}
-            />
-            <Select
-              size="md"
-              radius="md"
-              label="Kategori"
-              placeholder="Bir kategori seçin"
-              data={badges}
-              searchable
-              classNames={{
-                input:
-                  "border-gray-300 focus:border-blue-500 focus:ring-blue-500",
-              }}
-            />
-          </div>
-        </div>
         <main className="flex-1 p-2">
           <div className="flex justify-between items-center border shadow bg-white border-background-lightAlt1 dark:border-background-darkAlt3 dark:bg-background-darkAlt3 p-3 rounded-xl">
-            <div className="flex items-center">
-              <Button
-                onClick={() => setFilterBar(true)}
-                variant="transparent"
-                color="gray"
-                className="md:hidden"
-              >
-                <FaFilter />
-              </Button>
+            <div className="flex items-center gap-4">
+              {user && user.userType !== "genc" && (
+                <Button
+                  color="indigo"
+                  radius="md"
+                  size="md"
+                  onClick={() => {
+                    navigation("/etkinlik-olustur");
+                  }}
+                >
+                  Etkinlik Oluştur
+                </Button>
+              )}
               <h1 className="text-xl font-bold font-outfit text-indigo-500 dark:text-stext-dark">
                 Etkinlik Listesi
               </h1>
@@ -268,8 +219,8 @@ const EventListPage = () => {
             animate="visible"
           >
             {events.map((event, index) => (
-              <motion.div variants={itemVariants}>
-                <Event event={event as EventType} />
+              <motion.div key={index} variants={itemVariants}>
+                <Event event={event} />
               </motion.div>
             ))}
           </motion.div>

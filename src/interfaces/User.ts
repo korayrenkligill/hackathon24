@@ -10,8 +10,8 @@ export interface User {
   userType: UserTypes;
   badges?: Badge[];
   point?: number;
-  //   blogs?: blog;
-  // profileDetails?: anlamadım
+  blogs?: any[];
+  profileDetails?: any;
   otp?: string;
   otpExpiry?: string;
   createdAt?: string;

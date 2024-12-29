@@ -1,25 +1,23 @@
 import { useIntl } from "react-intl";
-import ForumItemFc, { ForumItem } from "../Forum/Forum";
+import ForumItemFc from "../Forum/Forum";
 import { useEffect, useState } from "react";
-import axios from "axios";
-import { ApiUrls } from "../../api/apiUrls";
+import { Forum } from "../../interfaces/GlobalTypes";
 
 const ForumContainer = () => {
   const intl = useIntl();
-  const [forumData, setForumData] = useState<ForumItem[]>([]);
-
-  const fetchForumData = async () => {
-    try {
-      await axios.get(ApiUrls.forum.forums).then((res) => {
-        setForumData(res.data);
-      });
-    } catch (error) {
-      console.error("Error fetching forum data:", error);
+  const [forumData, setForumData] = useState<Forum[]>([]);
+  const getForums = () => {
+    const forum: Forum[] = JSON.parse(localStorage.getItem("forums") || "[]");
+    if (forum.length > 10) {
+      forum.slice(0, 10);
+      setForumData(forum);
+    } else {
+      setForumData(forum);
     }
   };
 
   useEffect(() => {
-    fetchForumData();
+    getForums();
   }, []);
 
   return (
@@ -30,7 +28,7 @@ const ForumContainer = () => {
       </h1>
       <div className="p-4 bg-white dark:bg-background-darkAlt3 shadow-md rounded-lg">
         {forumData.map((item) => (
-          <ForumItemFc key={item._id} item={item} />
+          <ForumItemFc key={item.id} item={item} />
         ))}
       </div>
     </div>

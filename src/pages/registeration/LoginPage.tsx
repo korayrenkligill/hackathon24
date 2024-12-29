@@ -1,51 +1,38 @@
 import { Button, TextInput } from "@mantine/core";
-import { useAtom, useSetAtom } from "jotai";
+import { useSetAtom } from "jotai";
 import { Link, useNavigate } from "react-router-dom";
 import { authAtom } from "../../components/AuthContext";
 import { useState } from "react";
-import { ApiUrls } from "../../api/apiUrls";
 import { toast } from "react-toastify";
-import userAtom from "../../store/User";
-import axios from "axios";
 import { useIntl } from "react-intl";
+import { User } from "../../interfaces/GlobalTypes";
 
 const LoginPage = () => {
   const intl = useIntl();
   const navigation = useNavigate();
   const setIsAuthenticated = useSetAtom(authAtom);
-  const [user, setUser] = useAtom(userAtom);
-  const [userData, setUserData] = useState<any>({
+  const [userData, setUserData] = useState({
     email: "",
     password: "",
   });
 
-  const getMe = async (token: string) => {
-    try {
-      await axios
-        .get(ApiUrls.users.profile, {
-          headers: { Authorization: `Bearer ${token}` },
-        })
-        .then((res) => {
-          setIsAuthenticated(true);
-          setUser(res.data);
-        });
-    } catch (error: any) {
-      console.log(error);
-    }
-  };
-  const Login = async () => {
-    try {
-      const response = await axios.post(ApiUrls.users.login, userData);
-      const token = response.data.token;
-      localStorage.setItem("token", token);
-      getMe(token);
-      setIsAuthenticated(true);
-      navigation("/");
-      return response.data;
-    } catch (error: any) {
-      toast.error(intl.formatMessage({ id: "error.login" }));
+  const Login = () => {
+    // LocalStorage'daki kullanıcıları al
+    const users: User[] = JSON.parse(localStorage.getItem("users") || "[]");
+
+    // Kullanıcıyı bul
+    const user = users.find(
+      (user) =>
+        userData.email === user.email && userData.password === user.password
+    );
+    console.log(users, user, userData);
+    if (!user) {
+      toast.error("error.login");
       return;
     }
+    localStorage.setItem("lu", JSON.stringify(user));
+    setIsAuthenticated(true);
+    navigation("/");
   };
 
   return (

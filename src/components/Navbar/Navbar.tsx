@@ -13,8 +13,6 @@ import { IoClose, IoMenu } from "react-icons/io5";
 import { atom, useAtom, useSetAtom } from "jotai";
 import { authAtom, useAuth } from "../AuthContext";
 import userAtom from "../../store/User";
-import axios from "../../utils/axiosConfig";
-import { ApiUrls } from "../../api/apiUrls";
 import { useIntl } from "react-intl";
 
 const menuIsOpenAtom = atom<boolean>(false);
@@ -194,19 +192,15 @@ const Navbar = () => {
   const [flag, setFlag] = useState(localStorage.getItem("lang") || "tr");
 
   const [user, setUser] = useAtom(userAtom);
-  const getMe = async () => {
-    try {
-      await axios.get(ApiUrls.users.profile).then((res) => {
-        setIsAuthenticated(true);
-        setUser(res.data);
-      });
-    } catch (error: any) {
-      console.log(error);
-    }
-  };
+
   useEffect(() => {
-    getMe();
+    const user = localStorage.getItem("lu");
+    if (user) {
+      setIsAuthenticated(true);
+      setUser(JSON.parse(user));
+    }
   }, []);
+
   return (
     <nav
       className={`flex flex-col md:flex-row gap-4 md:items-center md:justify-between md:backdrop-blur-sm ${
@@ -280,9 +274,12 @@ const Navbar = () => {
           >
             <span className="mr-2">{user.name}</span>
             <img
-              src="https://placehold.co/600x400"
+              src={
+                user?.profile ??
+                "https://png.pngtree.com/png-vector/20221203/ourmid/pngtree-cartoon-style-male-user-profile-icon-vector-illustraton-png-image_6489287.png"
+              }
               alt="profil resmi"
-              className="w-14 h-14 object-cover rounded-full"
+              className="w-14 h-14 object-cover rounded-full bg-indigo-700"
             />
           </div>
         ) : (

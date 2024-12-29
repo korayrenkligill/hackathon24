@@ -15,7 +15,7 @@ const Main = () => {
       </main>
       <Footer />
       {/* Chat Popup */}
-      <ChatPopup isOpen={isPopupOpen} onClose={() => setIsPopupOpen(false)} />
+      {/* <ChatPopup isOpen={isPopupOpen} onClose={() => setIsPopupOpen(false)} /> */}
     </div>
   );
 };
